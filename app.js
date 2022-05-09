@@ -5,6 +5,7 @@ var cors = require("cors");
 const app = express();
 
 const cookieParser = require("cookie-parser");
+const fileUpload = require("express-fileupload");
 
 // Middlewares
 app.use(
@@ -17,14 +18,20 @@ app.use(
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
+app.use(
+  fileUpload({
+    useTempFiles: true,
+    tempFileDir: "/tmp/",
+  })
+);
 
 // Routes
 const homeRoute = require("./server/routes/homeRoute");
-// const userRoute = require("./server/routes/userRoute");
-// const videoRoute = require("./server/routes/videoRoute");
+const userRoute = require("./server/routes/userRoute");
+const postRoute = require("./server/routes/postRoute");
 
 app.use("/api/v1", homeRoute);
-// app.use("/api/v1", userRoute);
-// app.use("/api/v1", videoRoute);
+app.use("/api/v1", userRoute);
+app.use("/api/v1", postRoute);
 
 module.exports = app;
