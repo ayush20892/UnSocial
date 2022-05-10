@@ -19,7 +19,7 @@
 <br />
 
 ## Overview:
-<p>✨ UnVisual is a Social Media app for connecting with friends and sharing content ✨</p>
+<p>✨ UnSocial is a Social Media app for connecting with friends and sharing content ✨</p>
 
 ## Preview (Responsive) :
 ![](/client/src/icon/UnSocial.gif)
@@ -38,14 +38,13 @@
  
 ## Features: 
 - User Authentication with Forgot Password
-- Add Videos to Watch Later & Liked
-- Create Playlist and add videos
-- Track History
-- Add and Delete Comments on Video
+- Create & Edit Post
+- Comment, Like and Bookmark Postt
+- Follow/Unfollow Users
 
 ## Future Improvements:
-- Upload Video
-- Create User channel
+- Background Image
+- In-App Post Sharing
 - Keyboard Accessibility
 
 ## Client Intallation Steps
