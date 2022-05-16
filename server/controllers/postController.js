@@ -37,7 +37,7 @@ exports.createPost = BigPromise(async (req, res) => {
     textContent: req.body.textContent,
     userId: user._id,
   };
-  console.log(req.files);
+
   if (req.files) {
     const photo = req.files.image;
 

@@ -16,8 +16,8 @@ const {
 const { isLoggedIn } = require("../middlewares/user");
 
 // GET Posts Routes
-router.route("/getAllPosts").get(isLoggedIn, getAllPosts);
-router.route("/post/:postId").get(isLoggedIn, getSinglePost);
+router.route("/getAllPosts").get(getAllPosts);
+router.route("/post/:postId").get(getSinglePost);
 
 // Posts Create & Edit
 router

@@ -341,7 +341,7 @@ exports.followUser = BigPromise(async (req, res) => {
 
 exports.unfollowUser = BigPromise(async (req, res) => {
   const user = req.user;
-  const { userId } = req.body.userId;
+  const { userId } = req.body;
 
   const updatedFollowing = user.following.filter(
     (user) => user._id.toString() !== userId
@@ -464,6 +464,18 @@ exports.deleteFromNotification = BigPromise(async (req, res) => {
   );
 
   await user.updateOne({ notification: updatedNotification });
+
+  res.status(200).json({
+    success: true,
+    user,
+  });
+});
+
+exports.getUser = BigPromise(async (req, res) => {
+  const user = await User.findById(req.params.id);
+  user.bookmarkedPosts = undefined;
+  user.archivePosts = undefined;
+  user.notification = undefined;
 
   res.status(200).json({
     success: true,
