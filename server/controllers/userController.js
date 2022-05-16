@@ -472,7 +472,8 @@ exports.deleteFromNotification = BigPromise(async (req, res) => {
 });
 
 exports.getUser = BigPromise(async (req, res) => {
-  const user = await User.findById(req.params.id);
+  const { userName } = req.params;
+  const user = await User.find({ userName });
   user.bookmarkedPosts = undefined;
   user.archivePosts = undefined;
   user.notification = undefined;

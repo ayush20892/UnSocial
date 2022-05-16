@@ -72,7 +72,7 @@ router
   .delete(isLoggedIn, deleteFromNotification);
 
 // Get User
-router.route("/user/:id").get(isLoggedIn, getUser);
+router.route("/user/:userName").get(isLoggedIn, getUser);
 
 // Admin Routes
 router
