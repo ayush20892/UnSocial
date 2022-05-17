@@ -61,16 +61,27 @@ exports.login = BigPromise(async (req, res) => {
       message: "All fields required",
     });
 
-  const userUniqueValue = email === undefined ? userName : email;
-  const user = await User.findOne({ userUniqueValue })
-    .select("+password")
-    .populate("following")
-    .populate("followers")
-    .populate("posts")
-    .populate("likedPosts")
-    .populate("bookmarkedPosts")
-    .populate("archivePosts")
-    .populate("notification");
+  let user = null;
+  if (!userName.includes("@"))
+    user = await User.findOne({ userName })
+      .select("+password")
+      .populate("following")
+      .populate("followers")
+      .populate("posts")
+      .populate("likedPosts")
+      .populate("bookmarkedPosts")
+      .populate("archivePosts")
+      .populate("notification");
+  else
+    user = await User.findOne({ email })
+      .select("+password")
+      .populate("following")
+      .populate("followers")
+      .populate("posts")
+      .populate("likedPosts")
+      .populate("bookmarkedPosts")
+      .populate("archivePosts")
+      .populate("notification");
 
   // If user not present in database.
   if (!user)
@@ -293,7 +304,6 @@ exports.updateUser = BigPromise(async (req, res) => {
 
     const result = await cloudinary.uploader.upload(photo.tempFilePath, {
       folder: "unsocial/profile_picture",
-      width: 150,
       crop: "scale",
     });
 
@@ -352,7 +362,7 @@ exports.unfollowUser = BigPromise(async (req, res) => {
   const followedUser = await User.findById(userId);
 
   const updatedFollowers = followedUser.followers.filter(
-    (user) => user._id.toString() !== user._id
+    (userFollower) => userFollower._id.toString() !== user._id.toString()
   );
 
   await followedUser.updateOne({ followers: updatedFollowers });
@@ -473,7 +483,13 @@ exports.deleteFromNotification = BigPromise(async (req, res) => {
 
 exports.getUser = BigPromise(async (req, res) => {
   const { userName } = req.params;
-  const user = await User.find({ userName });
+  const user = await User.find({ userName })
+    .populate("following")
+    .populate("followers")
+    .populate("posts")
+    .populate("posts.userId")
+    .populate("likedPosts")
+    .populate("likedPosts.userId");
   user.bookmarkedPosts = undefined;
   user.archivePosts = undefined;
   user.notification = undefined;

@@ -43,7 +43,6 @@ exports.createPost = BigPromise(async (req, res) => {
 
     const result = await cloudinary.uploader.upload(photo.tempFilePath, {
       folder: "unsocial/post",
-      width: 150,
       crop: "scale",
     });
 
@@ -54,6 +53,8 @@ exports.createPost = BigPromise(async (req, res) => {
   }
 
   const post = await Post.create(updatedObject);
+
+  post.populate("userId");
 
   if (user.posts.find((post) => post._id.toString() === post._id))
     return res.json({
@@ -106,7 +107,6 @@ exports.editPost = BigPromise(async (req, res) => {
 
     const result = await cloudinary.uploader.upload(photo.tempFilePath, {
       folder: "unsocial/post",
-      width: 150,
       crop: "scale",
     });
 
