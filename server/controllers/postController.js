@@ -17,11 +17,11 @@ exports.getAllPosts = BigPromise(async (req, res) => {
 });
 
 exports.getSinglePost = BigPromise(async (req, res) => {
-  const post = await Post.findById(req.params.id)
+  const post = await Post.findById(req.params.postId)
     .populate("userId")
     .populate("likes")
     .populate("comments.user")
-    .populate("comment.replies.user");
+    .populate("comments.replies.user");
 
   res.status(200).json({
     success: true,
@@ -37,13 +37,12 @@ exports.createPost = BigPromise(async (req, res) => {
     textContent: req.body.textContent,
     userId: user._id,
   };
-  console.log(req.files);
+
   if (req.files) {
     const photo = req.files.image;
 
     const result = await cloudinary.uploader.upload(photo.tempFilePath, {
       folder: "unsocial/post",
-      width: 150,
       crop: "scale",
     });
 
@@ -54,6 +53,8 @@ exports.createPost = BigPromise(async (req, res) => {
   }
 
   const post = await Post.create(updatedObject);
+
+  post.populate("userId");
 
   if (user.posts.find((post) => post._id.toString() === post._id))
     return res.json({
@@ -106,7 +107,6 @@ exports.editPost = BigPromise(async (req, res) => {
 
     const result = await cloudinary.uploader.upload(photo.tempFilePath, {
       folder: "unsocial/post",
-      width: 150,
       crop: "scale",
     });
 
@@ -234,9 +234,16 @@ exports.addReply = BigPromise(async (req, res) => {
 
   await post.save();
 
+  const commentReplies = post.comments.find(
+    (comment) => comment._id.toString() === commentId
+  ).replies;
+  const newReply = commentReplies[commentReplies.length - 1];
+  newReply.user = user;
+
   res.status(200).json({
     success: true,
     post,
+    newReply,
   });
 });
 

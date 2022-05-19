@@ -7,7 +7,7 @@ class WhereClause {
   search() {
     const searchWord = this.bigQ.search
       ? {
-          name: {
+          userName: {
             $regex: this.bigQ.search,
             $options: "i",
           },

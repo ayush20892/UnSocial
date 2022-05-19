@@ -19,6 +19,8 @@ const {
   deleteFromArchivePosts,
   addToNotification,
   deleteFromNotification,
+  getUser,
+  searchUser,
   adminUsers,
   adminGetUser,
   adminUpdateUser,
@@ -69,6 +71,11 @@ router
   .route("/user/notification")
   .post(isLoggedIn, addToNotification)
   .delete(isLoggedIn, deleteFromNotification);
+
+// Get User
+router.route("/user/:userName").get(isLoggedIn, getUser);
+
+router.route("/search").get(isLoggedIn, searchUser);
 
 // Admin Routes
 router

@@ -1,0 +1,83 @@
+.landing-page {
+  background-color: #f0f2f5;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100vh;
+}
+
+.landing-box {
+  width: 980px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 32px;
+  position: relative;
+  bottom: 50px;
+}
+
+.landing-box > .landing-greet {
+  width: 580px;
+}
+
+.landing-greet > .brand-name {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  font-size: 50px;
+  margin-bottom: 15px;
+}
+
+.landing-greet > .brand-name > span {
+  font-size: 25px;
+  font-weight: 300;
+  letter-spacing: 10px;
+  margin-left: 20px;
+}
+
+.landing-greet > .greeting {
+  font-size: 28px;
+}
+
+.landing-box > .auth-box {
+  width: 396px;
+}
+
+@media only screen and (max-width: 1075px) {
+  .landing-box {
+    width: auto;
+  }
+
+  .landing-box > .landing-greet {
+    width: 400px;
+  }
+}
+
+@media screen and (max-width: 900px) {
+  .landing-page{
+    background-color: #fff;
+  }
+
+  .landing-box {
+    flex-direction: column;
+    width: 100%;
+    margin: 0 auto;
+  }
+
+  .landing-box > .landing-greet {
+    width: 80%;
+  }
+
+  .landing-greet > .brand-name {
+    justify-content: center;
+  }
+
+  .landing-greet > .greeting {
+    display: none;
+  }
+
+  .landing-box > .auth-box {
+    width: 100%;
+  }
+}

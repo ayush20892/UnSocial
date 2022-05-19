@@ -1,0 +1,30 @@
+.notification-card-display {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: start;
+  width: 450px;
+}
+
+.notification-card-display > .heading {
+  width: 100%;
+  margin-bottom: 20px;
+  font-size: 20px;
+  font-weight: 600;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.notification-card-display > .heading > button {
+  border: 1px solid black;
+  border-radius: 10px;
+  padding: 5px 10px;
+}
+
+@media screen and (max-width: 768px) {
+  .notification-card-display {
+    width: 100%;
+    padding: 0 20px;
+  }
+}

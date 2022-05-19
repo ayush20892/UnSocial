@@ -1,0 +1,136 @@
+.comment-box {
+  width: 500px;
+}
+
+.user-comment {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 10px 0;
+}
+
+.user-comment > input {
+  width: 80%;
+  border: 1px solid black;
+  border-radius: 10px;
+  padding: 10px;
+  margin-right: 10px;
+}
+
+.user-comment > button {
+  width: 20%;
+  padding: 10px;
+  background-color: var(--brand-color);
+  border: 1px solid var(--brand-color);
+  border-radius: 10px;
+  color: var(--text-secondary);
+}
+
+.comment-list {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+}
+
+.comment-item {
+  margin-top: 20px;
+  width: 100%;
+  display: flex;
+  justify-content: start;
+  align-items: start;
+}
+
+.comment-item > img {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+.comment-item > .comment-details {
+  padding-left: 20px;
+  width: 100%;
+}
+
+.comment-details > .user-detail {
+  display: flex;
+  gap: 5px;
+  margin-top: 10px;
+  font-size: 15px;
+}
+
+.comment-details > .user-detail > .name {
+  font-weight: 600;
+}
+
+.comment-details > .user-detail > .username {
+  font-weight: 200;
+  color: grey;
+}
+
+.comment-details > .comment-text {
+  margin: 10px 0;
+  font-size: 18px;
+  font-weight: 500;
+}
+
+.comment-details > .comment-action {
+  display: flex;
+  justify-content: start;
+  align-items: center;
+  gap: 10px;
+}
+
+.comment-action > span {
+  color: grey;
+  cursor: pointer;
+}
+
+.comment-details > .user-reply {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 10px 0;
+}
+
+.user-reply > input {
+  width: 80%;
+  border: 1px solid black;
+  border-radius: 10px;
+  padding: 10px;
+  margin-right: 10px;
+}
+
+.user-reply > button {
+  width: 20%;
+  padding: 10px;
+  background-color: var(--brand-color);
+  border: 1px solid var(--brand-color);
+  border-radius: 10px;
+  color: var(--text-secondary);
+}
+
+@media screen and (max-width: 1150px) {
+  .comment-box {
+    width: 450px;
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .comment-box {
+    width: 92%;
+    margin: auto;
+    margin-bottom: 20px;
+  }
+
+  .user-comment > input {
+    width: 75%;
+  }
+
+  .user-comment > button {
+    width: 25%;
+  }
+}

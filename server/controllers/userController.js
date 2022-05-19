@@ -1,6 +1,7 @@
 const User = require("../models/userModel");
 const Notification = require("../models/notificationModel");
 const cloudinary = require("cloudinary").v2;
+const WhereClause = require("../utils/whereClause");
 const BigPromise = require("../middlewares/bigPromise");
 const cookieToken = require("../utils/cookieToken");
 const customError = require("../utils/customError");
@@ -8,6 +9,7 @@ const mailHelper = require("../utils/mailHelper");
 const crypto = require("crypto");
 const { extend } = require("lodash");
 const validator = require("validator");
+const { UserNotification } = require("../utils/getNotification");
 
 exports.signup = BigPromise(async (req, res) => {
   const { name, userName, email, password } = req.body;
@@ -61,16 +63,31 @@ exports.login = BigPromise(async (req, res) => {
       message: "All fields required",
     });
 
-  const userUniqueValue = email === undefined ? userName : email;
-  const user = await User.findOne({ userUniqueValue })
-    .select("+password")
-    .populate("following")
-    .populate("followers")
-    .populate("posts")
-    .populate("likedPosts")
-    .populate("bookmarkedPosts")
-    .populate("archivePosts")
-    .populate("notification");
+  let user = null;
+  if (userName && !userName.includes("@"))
+    user = await User.findOne({ userName })
+      .select("+password")
+      .populate("following")
+      .populate("followers")
+      .populate("posts")
+      .populate("likedPosts")
+      .populate("bookmarkedPosts")
+      .populate("archivePosts")
+      .populate("notification")
+      .populate("notification.fromUser")
+      .populate("notification.post");
+  else
+    user = await User.findOne({ email })
+      .select("+password")
+      .populate("following")
+      .populate("followers")
+      .populate("posts")
+      .populate("likedPosts")
+      .populate("bookmarkedPosts")
+      .populate("archivePosts")
+      .populate("notification")
+      .populate("notification.fromUser")
+      .populate("notification.post");
 
   // If user not present in database.
   if (!user)
@@ -85,6 +102,15 @@ exports.login = BigPromise(async (req, res) => {
       success: false,
       message: "Incorrect Password !!",
     });
+
+  const allNotifications = await Notification.find()
+    .populate("fromUser")
+    .populate("post")
+    .populate("toUser");
+
+  const userNotification = UserNotification(user._id, allNotifications);
+
+  user.notification = userNotification;
 
   cookieToken(user, res);
 });
@@ -226,7 +252,15 @@ exports.userDashboard = BigPromise(async (req, res) => {
 });
 
 exports.updatePassword = BigPromise(async (req, res) => {
-  const user = await User.findById(req.user.id).select("+password");
+  const user = await User.findById(req.user.id)
+    .select("+password")
+    .populate("following")
+    .populate("followers")
+    .populate("posts")
+    .populate("likedPosts")
+    .populate("bookmarkedPosts")
+    .populate("archivePosts")
+    .populate("notification");
 
   const isPasswordValidated = await user.isPasswordValidated(
     req.body.oldPassword
@@ -252,6 +286,21 @@ exports.updatePassword = BigPromise(async (req, res) => {
       message: "Password and Confirm Password didn't match",
     });
 
+  if (password.length < 6)
+    return res.json({
+      success: false,
+      message: "Password should be of atleast of 6 chars.",
+    });
+
+  const allNotifications = await Notification.find()
+    .populate("fromUser")
+    .populate("post")
+    .populate("toUser");
+
+  const userNotification = UserNotification(user._id, allNotifications);
+
+  user.notification = userNotification;
+
   user.password = password;
 
   await user.save();
@@ -261,28 +310,45 @@ exports.updatePassword = BigPromise(async (req, res) => {
 
 exports.updateUser = BigPromise(async (req, res) => {
   const user = req.user;
+  const { name, userName, email, bio, deletePicture } = req.body;
 
   const updatedObject = {
-    name: req.body.name,
-    userName: req.body.userName,
-    email: req.body.email,
-    bio: req.body.bio,
+    name,
+    userName,
+    email,
+    bio,
   };
 
-  if (req.body.email) {
-    if (!validator.isEmail(req.body.email))
+  if (email) {
+    if (!validator.isEmail(email))
       return res.json({
         success: false,
         message: "Enter correct email format.",
       });
   }
 
-  if (req.body.userName !== user.userName) {
+  if (email !== user.email) {
+    if (await User.findOne({ email }))
+      return res.json({
+        success: false,
+        message: "Email already registered, try different.",
+      });
+  }
+
+  if (userName !== user.userName) {
     if (await User.findOne({ userName }))
       return res.json({
         success: false,
         message: "Username taken, try different.",
       });
+  }
+
+  if (deletePicture === "DELETE") {
+    await cloudinary.uploader.destroy(user.profilePicture.id);
+    updatedObject.profilePicture = {
+      id: "",
+      secure_url: "",
+    };
   }
 
   if (req.files) {
@@ -293,7 +359,6 @@ exports.updateUser = BigPromise(async (req, res) => {
 
     const result = await cloudinary.uploader.upload(photo.tempFilePath, {
       folder: "unsocial/profile_picture",
-      width: 150,
       crop: "scale",
     });
 
@@ -341,7 +406,7 @@ exports.followUser = BigPromise(async (req, res) => {
 
 exports.unfollowUser = BigPromise(async (req, res) => {
   const user = req.user;
-  const { userId } = req.body.userId;
+  const { userId } = req.body;
 
   const updatedFollowing = user.following.filter(
     (user) => user._id.toString() !== userId
@@ -352,7 +417,7 @@ exports.unfollowUser = BigPromise(async (req, res) => {
   const followedUser = await User.findById(userId);
 
   const updatedFollowers = followedUser.followers.filter(
-    (user) => user._id.toString() !== user._id
+    (userFollower) => userFollower._id.toString() !== user._id.toString()
   );
 
   await followedUser.updateOne({ followers: updatedFollowers });
@@ -464,6 +529,39 @@ exports.deleteFromNotification = BigPromise(async (req, res) => {
   );
 
   await user.updateOne({ notification: updatedNotification });
+
+  res.status(200).json({
+    success: true,
+    user,
+  });
+});
+
+exports.getUser = BigPromise(async (req, res) => {
+  const { userName } = req.params;
+  const user = await User.find({ userName })
+    .populate("following")
+    .populate("followers")
+    .populate("posts")
+    .populate("posts.userId")
+    .populate("likedPosts")
+    .populate("likedPosts.userId")
+    .populate("bookmarkedPosts");
+  user.archivePosts = undefined;
+  user.notification = undefined;
+
+  res.status(200).json({
+    success: true,
+    user,
+  });
+});
+
+exports.searchUser = BigPromise(async (req, res) => {
+  const userWithClause = new WhereClause(User.find(), req.query)
+    .search()
+    .filter()
+    .pager();
+
+  const user = await userWithClause.base;
 
   res.status(200).json({
     success: true,

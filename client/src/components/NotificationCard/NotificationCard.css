@@ -1,0 +1,30 @@
+.notification-card {
+  width: 100%;
+  border: 1px solid var(--text-primary);
+  border-radius: 10px;
+  padding: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.notification-card > .user-details {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+}
+
+.notification-card > .user-details > img {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+}
+
+.notification-card > .notification-message > span {
+  color: var(--follow-button);
+  cursor: pointer;
+}
