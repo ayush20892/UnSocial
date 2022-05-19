@@ -2,7 +2,7 @@ import axios from "axios";
 import { notificationType } from "../types";
 axios.defaults.withCredentials = true;
 
-const { REACT_APP_BACKEND_URL_TEST } = process.env;
+const { REACT_APP_BACKEND_URL } = process.env;
 
 export async function signup(
   name: string,
@@ -11,7 +11,7 @@ export async function signup(
   password: string
 ) {
   try {
-    const { data } = await axios.post(`${REACT_APP_BACKEND_URL_TEST}/signup`, {
+    const { data } = await axios.post(`${REACT_APP_BACKEND_URL}/signup`, {
       name,
       userName,
       email,
@@ -25,7 +25,7 @@ export async function signup(
 
 export async function loginCall(email: string, password: string) {
   try {
-    const { data } = await axios.post(`${REACT_APP_BACKEND_URL_TEST}/login`, {
+    const { data } = await axios.post(`${REACT_APP_BACKEND_URL}/login`, {
       email,
       userName: email,
       password,
@@ -38,7 +38,7 @@ export async function loginCall(email: string, password: string) {
 
 export const logoutCall = async () => {
   try {
-    await axios.get(`${REACT_APP_BACKEND_URL_TEST}/logout`);
+    await axios.get(`${REACT_APP_BACKEND_URL}/logout`);
   } catch (err) {
     console.log(err);
   }
@@ -47,7 +47,7 @@ export const logoutCall = async () => {
 export async function forgotPassword(email: string) {
   try {
     const { data } = await axios.post(
-      `${REACT_APP_BACKEND_URL_TEST}/forgotPassword`,
+      `${REACT_APP_BACKEND_URL}/forgotPassword`,
       {
         email,
       }
@@ -60,12 +60,9 @@ export async function forgotPassword(email: string) {
 
 export async function verifyCode(forgotCode: string) {
   try {
-    const { data } = await axios.post(
-      `${REACT_APP_BACKEND_URL_TEST}/verifyCode`,
-      {
-        forgotCode,
-      }
-    );
+    const { data } = await axios.post(`${REACT_APP_BACKEND_URL}/verifyCode`, {
+      forgotCode,
+    });
     return data;
   } catch (err) {
     console.log(err);
@@ -75,7 +72,7 @@ export async function verifyCode(forgotCode: string) {
 export async function passwordReset(password: string, confirmPassword: string) {
   try {
     const { data } = await axios.post(
-      `${REACT_APP_BACKEND_URL_TEST}/password/reset`,
+      `${REACT_APP_BACKEND_URL}/password/reset`,
       {
         password,
         confirmPassword,
@@ -89,9 +86,7 @@ export async function passwordReset(password: string, confirmPassword: string) {
 
 export async function userDashboard() {
   try {
-    const { data } = await axios.get(
-      `${REACT_APP_BACKEND_URL_TEST}/userDashboard`
-    );
+    const { data } = await axios.get(`${REACT_APP_BACKEND_URL}/userDashboard`);
     return data;
   } catch (err) {
     console.log(err);
@@ -117,7 +112,7 @@ export const updateUserDataCall = async (
     formData.append("deletePicture", deletePicture);
     const { data } = await axios({
       method: "post",
-      url: `${REACT_APP_BACKEND_URL_TEST}/user/update`,
+      url: `${REACT_APP_BACKEND_URL}/user/update`,
       data: formData,
       headers: {
         "Content-Type": "multipart/form-data",
@@ -137,7 +132,7 @@ export const updateUserPassowrdCall = async (
   try {
     const { data } = await axios({
       method: "post",
-      url: `${REACT_APP_BACKEND_URL_TEST}/password/update`,
+      url: `${REACT_APP_BACKEND_URL}/password/update`,
       data: {
         oldPassword,
         password,
@@ -154,7 +149,7 @@ export const followUserCall = async (userId: string) => {
   try {
     const { data } = await axios({
       method: "post",
-      url: `${REACT_APP_BACKEND_URL_TEST}/user/follow`,
+      url: `${REACT_APP_BACKEND_URL}/user/follow`,
       data: {
         userId,
       },
@@ -169,7 +164,7 @@ export const unFollowUserCall = async (userId: string) => {
   try {
     const { data } = await axios({
       method: "delete",
-      url: `${REACT_APP_BACKEND_URL_TEST}/user/follow`,
+      url: `${REACT_APP_BACKEND_URL}/user/follow`,
       data: {
         userId,
       },
@@ -184,7 +179,7 @@ export const bookmarkPostCall = async (postId: string) => {
   try {
     const { data } = await axios({
       method: "post",
-      url: `${REACT_APP_BACKEND_URL_TEST}/user/bookmarkedPost`,
+      url: `${REACT_APP_BACKEND_URL}/user/bookmarkedPost`,
       data: {
         postId,
       },
@@ -199,7 +194,7 @@ export const unBookmarkPostCall = async (postId: string) => {
   try {
     const { data } = await axios({
       method: "delete",
-      url: `${REACT_APP_BACKEND_URL_TEST}/user/bookmarkedPost`,
+      url: `${REACT_APP_BACKEND_URL}/user/bookmarkedPost`,
       data: {
         postId,
       },
@@ -213,7 +208,7 @@ export const unBookmarkPostCall = async (postId: string) => {
 export const getUserCall = async (userName: string) => {
   try {
     const { data } = await axios.get(
-      `${REACT_APP_BACKEND_URL_TEST}/user/${userName}`
+      `${REACT_APP_BACKEND_URL}/user/${userName}`
     );
     return data;
   } catch (err) {
@@ -224,7 +219,7 @@ export const getUserCall = async (userName: string) => {
 export const searchCall = async (searchKey: string) => {
   try {
     const { data } = await axios.get(
-      `${REACT_APP_BACKEND_URL_TEST}/search?search=${searchKey}`
+      `${REACT_APP_BACKEND_URL}/search?search=${searchKey}`
     );
     return data;
   } catch (err) {
@@ -244,7 +239,7 @@ export const createNotificationCall = async ({
   try {
     const { data } = await axios({
       method: "post",
-      url: `${REACT_APP_BACKEND_URL_TEST}/notification/create`,
+      url: `${REACT_APP_BACKEND_URL}/notification/create`,
       data: {
         toUserId,
         type,
@@ -259,9 +254,7 @@ export const createNotificationCall = async ({
 
 export const getAllNotificationsCall = async () => {
   try {
-    const { data } = await axios.get(
-      `${REACT_APP_BACKEND_URL_TEST}/notification`
-    );
+    const { data } = await axios.get(`${REACT_APP_BACKEND_URL}/notification`);
     return data;
   } catch (err) {
     console.log(err);
@@ -272,7 +265,7 @@ export const deleteAllNotificationsCall = async () => {
   try {
     const { data } = await axios({
       method: "delete",
-      url: `${REACT_APP_BACKEND_URL_TEST}/notification`,
+      url: `${REACT_APP_BACKEND_URL}/notification`,
     });
     return data;
   } catch (err) {
@@ -286,7 +279,7 @@ export const updateNotificationsCall = async (
   try {
     const { data } = await axios({
       method: "post",
-      url: `${REACT_APP_BACKEND_URL_TEST}/notification`,
+      url: `${REACT_APP_BACKEND_URL}/notification`,
       data: { notificationIdArray: notificationIdArray },
     });
     return data;

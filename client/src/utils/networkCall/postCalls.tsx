@@ -1,16 +1,13 @@
 import axios from "axios";
 axios.defaults.withCredentials = true;
 
-const { REACT_APP_BACKEND_URL_TEST } = process.env;
+const { REACT_APP_BACKEND_URL } = process.env;
 
 export const getAllPosts = async () => {
   try {
-    const { data } = await axios.get(
-      `${REACT_APP_BACKEND_URL_TEST}/getAllPosts`,
-      {
-        withCredentials: true,
-      }
-    );
+    const { data } = await axios.get(`${REACT_APP_BACKEND_URL}/getAllPosts`, {
+      withCredentials: true,
+    });
     return data;
   } catch (err) {
     console.log(err);
@@ -19,9 +16,7 @@ export const getAllPosts = async () => {
 
 export const getOnePost = async (postId: string) => {
   try {
-    const { data } = await axios.get(
-      `${REACT_APP_BACKEND_URL_TEST}/post/${postId}`
-    );
+    const { data } = await axios.get(`${REACT_APP_BACKEND_URL}/post/${postId}`);
     return data;
   } catch (err) {
     console.log(err);
@@ -35,7 +30,7 @@ export const createPostCall = async (imageFile: File, textContent: string) => {
     formData.append("textContent", textContent);
     const { data } = await axios({
       method: "post",
-      url: `${process.env.REACT_APP_BACKEND_URL_TEST}/post`,
+      url: `${process.env.REACT_APP_BACKEND_URL}/post`,
       data: formData,
       headers: {
         "Content-Type": "multipart/form-data",
@@ -51,7 +46,7 @@ export const editPostCall = async (postId: string, textContent: string) => {
   try {
     const { data } = await axios({
       method: "post",
-      url: `${process.env.REACT_APP_BACKEND_URL_TEST}/editPost/${postId}`,
+      url: `${process.env.REACT_APP_BACKEND_URL}/editPost/${postId}`,
       data: { textContent },
     });
     return data;
@@ -64,7 +59,7 @@ export const deletePostCall = async (postId: string) => {
   try {
     const { data } = await axios({
       method: "delete",
-      url: `${REACT_APP_BACKEND_URL_TEST}/post`,
+      url: `${REACT_APP_BACKEND_URL}/post`,
       data: {
         postId: postId,
       },
@@ -79,7 +74,7 @@ export const likePostCall = async (postId: string) => {
   try {
     const { data } = await axios({
       method: "post",
-      url: `${REACT_APP_BACKEND_URL_TEST}/post/like`,
+      url: `${REACT_APP_BACKEND_URL}/post/like`,
       data: {
         postId: postId,
       },
@@ -94,7 +89,7 @@ export const unlikePostCall = async (postId: string) => {
   try {
     const { data } = await axios({
       method: "delete",
-      url: `${REACT_APP_BACKEND_URL_TEST}/post/like`,
+      url: `${REACT_APP_BACKEND_URL}/post/like`,
       data: {
         postId: postId,
       },
@@ -109,7 +104,7 @@ export const addCommentCall = async (postId: string, commentText: string) => {
   try {
     const { data } = await axios({
       method: "post",
-      url: `${REACT_APP_BACKEND_URL_TEST}/post/comment`,
+      url: `${REACT_APP_BACKEND_URL}/post/comment`,
       data: {
         postId,
         commentText,
@@ -125,7 +120,7 @@ export const deleteCommentCall = async (postId: string, commentId: string) => {
   try {
     const { data } = await axios({
       method: "delete",
-      url: `${REACT_APP_BACKEND_URL_TEST}/post/comment`,
+      url: `${REACT_APP_BACKEND_URL}/post/comment`,
       data: {
         postId,
         commentId,
@@ -145,7 +140,7 @@ export const addReplyCall = async (
   try {
     const { data } = await axios({
       method: "post",
-      url: `${REACT_APP_BACKEND_URL_TEST}/post/comment/reply`,
+      url: `${REACT_APP_BACKEND_URL}/post/comment/reply`,
       data: {
         postId,
         commentId,
@@ -166,7 +161,7 @@ export const deleteReplyCall = async (
   try {
     const { data } = await axios({
       method: "delete",
-      url: `${REACT_APP_BACKEND_URL_TEST}/post/comment/reply`,
+      url: `${REACT_APP_BACKEND_URL}/post/comment/reply`,
       data: {
         postId,
         commentId,
