@@ -1,0 +1,143 @@
+.edit-profile {
+  width: 550px;
+  display: flex;
+  flex-direction: column;
+  justify-content: start;
+  align-items: center;
+}
+
+.edit-profile > .edit-profile-picture {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+}
+
+.edit-profile > h3 {
+  text-align: center;
+  font-weight: 450;
+  font-size: 16px;
+  margin: 10px;
+}
+
+.edit-profile > .edit-profile-picture > img {
+  width: 160px;
+  height: 160px;
+  object-fit: cover;
+  border: 1px solid grey;
+  border-radius: 50%;
+}
+
+.edit-profile > .edit-profile-picture > .edit-btn {
+  position: absolute;
+  bottom: 10px;
+  right: 10px;
+  background-color: var(--text-secondary);
+  border-radius: 50%;
+  border: 1px solid grey;
+  padding: 5px 8px;
+  cursor: pointer;
+}
+
+.edit-profile > .edit-profile-picture > .delete-btn {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background-color: var(--text-secondary);
+  border-radius: 50%;
+  border: 1px solid grey;
+  padding: 2px 5px;
+  padding-top: 5px;
+  cursor: pointer;
+}
+
+.edit-profile > .edit-profile-picture > .edit-btn > input {
+  position: absolute;
+  right: 5px;
+  opacity: 0;
+  z-index: var(--z-index-3);
+  cursor: pointer;
+}
+
+.edit-profile > input {
+  width: 50%;
+  margin: 10px 0;
+  border: 1px solid black;
+  border-radius: 10px;
+  padding: 5px 8px;
+}
+
+.edit-profile > textarea {
+  height: 120px;
+  width: 50%;
+  margin: 10px 0;
+  border: 1px solid black;
+  border-radius: 10px;
+  padding: 5px 8px;
+}
+
+.edit-profile > h4 {
+  width: 50%;
+  font-weight: 450;
+  font-size: 16px;
+  margin-top: 16px;
+}
+
+.edit-profile > button {
+  width: 50%;
+  background-color: var(--brand-color);
+  color: var(--text-secondary);
+  margin: 10px 0;
+  padding: 10px;
+  border-radius: 10px;
+}
+
+.edit-profile > .logout-btn {
+  background-color: brown;
+}
+
+.edit-profile > .error-message {
+  font-size: 16px;
+  font-weight: 450;
+  color: red;
+}
+
+@media screen and (max-width: 1150px) {
+  .edit-profile {
+    width: 500px;
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .edit-profile {
+    width: 100%;
+  }
+
+  .edit-profile > .profile-picture {
+    width: 160px;
+  }
+
+  .edit-profile > .profile-picture > .edit-btn {
+    right: 1px;
+  }
+
+  .edit-profile > .profile-picture > .delete-btn {
+    right: 1px;
+  }
+
+  .edit-profile > input {
+    width: 75%;
+  }
+
+  .edit-profile > textarea {
+    width: 75%;
+  }
+
+  .edit-profile > h4 {
+    width: 75%;
+  }
+
+  .edit-profile > button {
+    width: 75%;
+  }
+}
