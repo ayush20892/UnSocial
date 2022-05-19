@@ -18,7 +18,9 @@ exports.isLoggedIn = async (req, res, next) => {
     .populate("likedPosts")
     .populate("bookmarkedPosts")
     .populate("archivePosts")
-    .populate("notification");
+    .populate("notification")
+    .populate("notification.fromUser")
+    .populate("notification.post");
 
   next();
 };

@@ -20,6 +20,7 @@ const {
   addToNotification,
   deleteFromNotification,
   getUser,
+  searchUser,
   adminUsers,
   adminGetUser,
   adminUpdateUser,
@@ -73,6 +74,8 @@ router
 
 // Get User
 router.route("/user/:userName").get(isLoggedIn, getUser);
+
+router.route("/search").get(isLoggedIn, searchUser);
 
 // Admin Routes
 router

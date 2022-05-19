@@ -6,16 +6,16 @@ const notificationSchema = mongoose.Schema({
     ref: "User",
     required: true,
   },
+  toUser: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "User",
+    required: true,
+  },
   type: {
     type: String,
     required: [true, "Type of notification"],
     enum: {
-      values: [
-        "Followed_User",
-        "Liked_Post",
-        "Comment_Post",
-        "Replied Comment",
-      ],
+      values: ["Followed_User", "Liked_Post", "Comment_Post"],
       message: "Please select the type",
     },
   },
@@ -26,9 +26,6 @@ const notificationSchema = mongoose.Schema({
   post: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "Post",
-  },
-  commentId: {
-    type: String,
   },
   createdAt: {
     type: Date,

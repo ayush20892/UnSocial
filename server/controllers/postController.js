@@ -17,11 +17,11 @@ exports.getAllPosts = BigPromise(async (req, res) => {
 });
 
 exports.getSinglePost = BigPromise(async (req, res) => {
-  const post = await Post.findById(req.params.id)
+  const post = await Post.findById(req.params.postId)
     .populate("userId")
     .populate("likes")
     .populate("comments.user")
-    .populate("comment.replies.user");
+    .populate("comments.replies.user");
 
   res.status(200).json({
     success: true,
@@ -234,9 +234,16 @@ exports.addReply = BigPromise(async (req, res) => {
 
   await post.save();
 
+  const commentReplies = post.comments.find(
+    (comment) => comment._id.toString() === commentId
+  ).replies;
+  const newReply = commentReplies[commentReplies.length - 1];
+  newReply.user = user;
+
   res.status(200).json({
     success: true,
     post,
+    newReply,
   });
 });
 

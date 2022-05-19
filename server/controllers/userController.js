@@ -1,6 +1,7 @@
 const User = require("../models/userModel");
 const Notification = require("../models/notificationModel");
 const cloudinary = require("cloudinary").v2;
+const WhereClause = require("../utils/whereClause");
 const BigPromise = require("../middlewares/bigPromise");
 const cookieToken = require("../utils/cookieToken");
 const customError = require("../utils/customError");
@@ -62,7 +63,7 @@ exports.login = BigPromise(async (req, res) => {
     });
 
   let user = null;
-  if (!userName.includes("@"))
+  if (userName && !userName.includes("@"))
     user = await User.findOne({ userName })
       .select("+password")
       .populate("following")
@@ -71,7 +72,9 @@ exports.login = BigPromise(async (req, res) => {
       .populate("likedPosts")
       .populate("bookmarkedPosts")
       .populate("archivePosts")
-      .populate("notification");
+      .populate("notification")
+      .populate("notification.fromUser")
+      .populate("notification.post");
   else
     user = await User.findOne({ email })
       .select("+password")
@@ -81,7 +84,9 @@ exports.login = BigPromise(async (req, res) => {
       .populate("likedPosts")
       .populate("bookmarkedPosts")
       .populate("archivePosts")
-      .populate("notification");
+      .populate("notification")
+      .populate("notification.fromUser")
+      .populate("notification.post");
 
   // If user not present in database.
   if (!user)
@@ -237,7 +242,15 @@ exports.userDashboard = BigPromise(async (req, res) => {
 });
 
 exports.updatePassword = BigPromise(async (req, res) => {
-  const user = await User.findById(req.user.id).select("+password");
+  const user = await User.findById(req.user.id)
+    .select("+password")
+    .populate("following")
+    .populate("followers")
+    .populate("posts")
+    .populate("likedPosts")
+    .populate("bookmarkedPosts")
+    .populate("archivePosts")
+    .populate("notification");
 
   const isPasswordValidated = await user.isPasswordValidated(
     req.body.oldPassword
@@ -263,6 +276,12 @@ exports.updatePassword = BigPromise(async (req, res) => {
       message: "Password and Confirm Password didn't match",
     });
 
+  if (password.length < 6)
+    return res.json({
+      success: false,
+      message: "Password should be of atleast of 6 chars.",
+    });
+
   user.password = password;
 
   await user.save();
@@ -272,28 +291,45 @@ exports.updatePassword = BigPromise(async (req, res) => {
 
 exports.updateUser = BigPromise(async (req, res) => {
   const user = req.user;
+  const { name, userName, email, bio, deletePicture } = req.body;
 
   const updatedObject = {
-    name: req.body.name,
-    userName: req.body.userName,
-    email: req.body.email,
-    bio: req.body.bio,
+    name,
+    userName,
+    email,
+    bio,
   };
 
-  if (req.body.email) {
-    if (!validator.isEmail(req.body.email))
+  if (email) {
+    if (!validator.isEmail(email))
       return res.json({
         success: false,
         message: "Enter correct email format.",
       });
   }
 
-  if (req.body.userName !== user.userName) {
+  if (email !== user.email) {
+    if (await User.findOne({ email }))
+      return res.json({
+        success: false,
+        message: "Email already registered, try different.",
+      });
+  }
+
+  if (userName !== user.userName) {
     if (await User.findOne({ userName }))
       return res.json({
         success: false,
         message: "Username taken, try different.",
       });
+  }
+
+  if (deletePicture === "DELETE") {
+    await cloudinary.uploader.destroy(user.profilePicture.id);
+    updatedObject.profilePicture = {
+      id: "",
+      secure_url: "",
+    };
   }
 
   if (req.files) {
@@ -489,10 +525,24 @@ exports.getUser = BigPromise(async (req, res) => {
     .populate("posts")
     .populate("posts.userId")
     .populate("likedPosts")
-    .populate("likedPosts.userId");
-  user.bookmarkedPosts = undefined;
+    .populate("likedPosts.userId")
+    .populate("bookmarkedPosts");
   user.archivePosts = undefined;
   user.notification = undefined;
+
+  res.status(200).json({
+    success: true,
+    user,
+  });
+});
+
+exports.searchUser = BigPromise(async (req, res) => {
+  const userWithClause = new WhereClause(User.find(), req.query)
+    .search()
+    .filter()
+    .pager();
+
+  const user = await userWithClause.base;
 
   res.status(200).json({
     success: true,
