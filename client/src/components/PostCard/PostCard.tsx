@@ -58,7 +58,7 @@ function PostCard({ post }: { post: postType }) {
   }
 
   function copyLink() {
-    navigator.clipboard.writeText(`http://localhost:3000/post/${post._id}`);
+    navigator.clipboard.writeText(`https://unsocial.netlify.app/post/${post._id}`);
     toast("Link Copied !");
   }
 
