@@ -9,6 +9,7 @@ const mailHelper = require("../utils/mailHelper");
 const crypto = require("crypto");
 const { extend } = require("lodash");
 const validator = require("validator");
+const { UserNotification } = require("../utils/getNotification");
 
 exports.signup = BigPromise(async (req, res) => {
   const { name, userName, email, password } = req.body;
@@ -101,6 +102,15 @@ exports.login = BigPromise(async (req, res) => {
       success: false,
       message: "Incorrect Password !!",
     });
+
+  const allNotifications = await Notification.find()
+    .populate("fromUser")
+    .populate("post")
+    .populate("toUser");
+
+  const userNotification = UserNotification(user._id, allNotifications);
+
+  user.notification = userNotification;
 
   cookieToken(user, res);
 });
@@ -281,6 +291,15 @@ exports.updatePassword = BigPromise(async (req, res) => {
       success: false,
       message: "Password should be of atleast of 6 chars.",
     });
+
+  const allNotifications = await Notification.find()
+    .populate("fromUser")
+    .populate("post")
+    .populate("toUser");
+
+  const userNotification = UserNotification(user._id, allNotifications);
+
+  user.notification = userNotification;
 
   user.password = password;
 

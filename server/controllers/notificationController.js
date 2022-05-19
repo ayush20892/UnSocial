@@ -39,6 +39,23 @@ exports.createNotification = BigPromise(async (req, res) => {
   });
 });
 
+exports.updateNotification = BigPromise(async (req, res) => {
+  const user = req.user;
+  const { notificationIdArray } = req.body;
+  console.log(notificationIdArray)
+
+  for (let i = 0; i < notificationIdArray.length; i++) {
+    const id = notificationIdArray[i]._id;
+    const notification = await Notification.findById(id);
+    notification.isRead = true;
+    await notification.save();
+  }
+
+  res.status(200).json({
+    success: true,
+  });
+});
+
 exports.deleteAllNotification = BigPromise(async (req, res) => {
   const user = req.user;
 
