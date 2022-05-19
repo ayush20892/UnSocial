@@ -1,0 +1,61 @@
+.user-card {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  width: 100%;
+  margin: 10px 0;
+}
+
+.user-card > .user-details {
+  display: flex;
+  justify-content: start;
+  align-items: center;
+  width: 75%;
+}
+
+.user-details > img {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+.user-details > span {
+  padding-left: 30px;
+  cursor: pointer;
+}
+
+.user-details > span > .name {
+  font-weight: 550;
+  font-weight: 20px;
+}
+
+.user-details > span > .username {
+  font-weight: 20px;
+  font-weight: 16px;
+}
+
+.user-card > .action-btn {
+  width: 25%;
+}
+
+.user-card > .action-btn > button {
+  width: 100%;
+  border: 1px solid black;
+  border-radius: 5px;
+  padding: 3px;
+  text-align: center;
+  cursor: pointer;
+}
+
+@media screen and (max-width: 1150px) {
+  .user-card {
+    width: 100%;
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .user-card {
+    width: 100%;
+  }
+}

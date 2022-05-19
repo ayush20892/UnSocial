@@ -1,0 +1,168 @@
+.profile-container {
+  width: 550px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: start;
+}
+
+.profile {
+  width: 100%;
+  display: flex;
+  justify-content: start;
+  align-items: start;
+}
+
+.profile-picture {
+  width: max(140px, 30%);
+}
+
+.profile-picture > img {
+  width: 140px;
+  height: 140px;
+  border-radius: 50%;
+}
+
+.profile-details {
+  width: max(188px, 70%);
+  min-height: 120px;
+  display: flex;
+  flex-direction: column;
+  justify-content: start;
+  align-items: start;
+  padding-left: 30px;
+}
+
+.profile-details > .username {
+  margin-bottom: 20px;
+  display: flex;
+  gap: 30px;
+  justify-content: space-evenly;
+}
+
+.username > span {
+  font-size: 24px;
+  font-weight: 300;
+}
+
+.username > button {
+  background-color: var(--text-secondary);
+  border: 0.1px solid black;
+  border-radius: 4px;
+  padding: 0 8px;
+}
+
+.profile-details > .user-content-numbers {
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+  margin-bottom: 14px;
+}
+
+.user-content-numbers > div {
+  padding-right: 26px;
+  cursor: pointer;
+}
+
+.user-content-numbers > div:first-child {
+  cursor: default;
+}
+
+.user-content-numbers > div > span {
+  font-weight: 600;
+  padding-right: 5px;
+}
+
+.profile-details > .information {
+  margin-bottom: 20px;
+}
+
+.information > .name {
+  font-weight: 540;
+  font-size: 16px;
+  margin-bottom: 6px;
+}
+
+.information > .bio {
+  font-size: 15px;
+  font-weight: 300;
+}
+
+.profile-content {
+  width: 100%;
+  margin-top: 20px;
+}
+
+.profile-content > .tabs {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-bottom: 1px solid grey;
+}
+
+.profile-content > .tabs > span {
+  width: 33.33%;
+  font-weight: 500;
+  padding-bottom: 10px;
+  cursor: pointer;
+  text-align: center;
+}
+
+.tab-active {
+  border-bottom: 3px solid black;
+}
+
+.tab-content {
+  width: 100%;
+  height: 100%;
+  padding-top: 20px;
+}
+
+@media screen and (max-width: 1150px) {
+  .profile-container {
+    width: 500px;
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .profile-container {
+    width: 100%;
+  }
+
+  .profile {
+    padding: 0 14px;
+  }
+
+  .profile-picture {
+    width: max(100px, 25%);
+  }
+
+  .profile-picture > img {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+  }
+
+  .user-content-numbers > div {
+    text-align: center;
+  }
+
+  .profile-content > .tabs {
+    width: 100%;
+    border-bottom: 1px solid grey;
+    justify-content: center;
+  }
+
+  .profile-content > .tabs > span {
+    width: 33.33%;
+    font-weight: 500;
+    padding-bottom: 10px;
+    text-align: center;
+  }
+
+  .tab-active {
+    border-top: none;
+    border-bottom: 2px solid black;
+  }
+}
