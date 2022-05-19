@@ -234,8 +234,8 @@ exports.passwordReset = BigPromise(async (req, res) => {
   res.cookie("userVerify", null, {
     expires: new Date(Date.now()),
     httpOnly: true,
-    // sameSite: "none",
-    // secure: true,
+    sameSite: "none",
+    secure: true,
   });
 
   cookieToken(user, res);
