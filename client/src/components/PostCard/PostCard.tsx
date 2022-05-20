@@ -44,12 +44,13 @@ function PostCard({ post }: { post: postType }) {
   async function likeHandler() {
     if (user._id === "") navigate("/landing");
     dispatch(likePost({ user, post }));
-    if (user._id !== post.userId._id)
+    if (user._id !== post.userId._id) {
       await createNotificationCall({
         toUserId: post.userId._id,
         type: "Liked_Post",
         postId: post._id,
       });
+    }
     await likePostCall(post._id);
   }
 
