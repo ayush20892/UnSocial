@@ -76,7 +76,9 @@ exports.deletePost = BigPromise(async (req, res) => {
   const { postId } = req.body;
   const post = await Post.findById(postId);
 
-  if (post?.image) await cloudinary.uploader.destroy(post.image.id);
+  if (post.image?.id === undefined) {
+    cloudinary.uploader.destroy(post.image.id);
+  }
 
   await post.delete();
 
