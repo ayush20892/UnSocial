@@ -35,11 +35,12 @@ function CommentBox({ post }: { post: postType }) {
   async function commentHandler() {
     if (user._id === "") navigate("/landing");
     const data = await addCommentCall(postId!, text);
-    await createNotificationCall({
-      toUserId: post.userId._id,
-      type: "Comment_Post",
-      postId: postId,
-    });
+    if (user._id !== post.userId._id)
+      await createNotificationCall({
+        toUserId: post.userId._id,
+        type: "Comment_Post",
+        postId: postId,
+      });
     const updatedComment = [...comments, data.newComment];
     setComments(updatedComment);
     setText("");

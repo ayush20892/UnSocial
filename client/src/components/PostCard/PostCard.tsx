@@ -44,11 +44,12 @@ function PostCard({ post }: { post: postType }) {
   async function likeHandler() {
     if (user._id === "") navigate("/landing");
     dispatch(likePost({ user, post }));
-    await createNotificationCall({
-      toUserId: post.userId._id,
-      type: "Liked_Post",
-      postId: post._id,
-    });
+    if (user._id !== post.userId._id)
+      await createNotificationCall({
+        toUserId: post.userId._id,
+        type: "Liked_Post",
+        postId: post._id,
+      });
     await likePostCall(post._id);
   }
 
@@ -58,7 +59,9 @@ function PostCard({ post }: { post: postType }) {
   }
 
   function copyLink() {
-    navigator.clipboard.writeText(`https://unsocial.netlify.app/post/${post._id}`);
+    navigator.clipboard.writeText(
+      `https://unsocial.netlify.app/post/${post._id}`
+    );
     toast("Link Copied !");
   }
 
