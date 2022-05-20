@@ -4,7 +4,7 @@ import { MdOutlineExplore } from "react-icons/md";
 import { IoNotificationsOutline } from "react-icons/io5";
 import userImage from "../../icon/user.png";
 import "./footer.css";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { getUser } from "../../features/user/userSlice";
 import { useSelector } from "react-redux";
 
@@ -12,6 +12,12 @@ export default function Footer() {
   const user = useSelector(getUser);
   const navigate = useNavigate();
   const [unreadCount, setUnreadCount] = useState(0);
+  const { pathname } = useLocation();
+
+  function activeIcon(path: string) {
+    if (path === pathname) return { borderBottom: "2px solid black" };
+    return;
+  }
 
   useEffect(() => {
     setUnreadCount(
@@ -21,22 +27,39 @@ export default function Footer() {
 
   return (
     <footer>
-      <div className="footer-pill" onClick={() => navigate("/")}>
+      <div
+        className="footer-pill"
+        onClick={() => navigate("/")}
+        style={activeIcon("/")}
+      >
         <AiOutlineHome />
       </div>
-      <div className="footer-pill" onClick={() => navigate("/explore")}>
+      <div
+        className="footer-pill"
+        onClick={() => navigate("/explore")}
+        style={activeIcon("/explore")}
+      >
         <MdOutlineExplore />
       </div>
-      <div className="footer-pill" onClick={() => navigate("/createPost")}>
+      <div
+        className="footer-pill"
+        onClick={() => navigate("/createPost")}
+        style={activeIcon("/createPost")}
+      >
         <AiOutlinePlusSquare />
       </div>
-      <div className="footer-pill" onClick={() => navigate("/notification")}>
+      <div
+        className="footer-pill"
+        onClick={() => navigate("/notification")}
+        style={activeIcon("/notification")}
+      >
         <IoNotificationsOutline />
         {unreadCount > 0 && <span>{unreadCount}</span>}
       </div>
       <div
         className="footer-pill"
         onClick={() => navigate(`/user/${user.userName}`)}
+        style={activeIcon(`/user/${user.userName}`)}
       >
         <img
           src={
