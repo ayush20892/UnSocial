@@ -20,7 +20,9 @@ function Feed() {
   }
   postarray = [
     ...postarray,
-    ...posts.filter((post) => post.userId._id === loggedInUser._id),
+    ...posts.filter((post) => {
+      return post.userId._id === loggedInUser._id;
+    }),
   ];
 
   return <PostCardDisplay posts={postarray} />;

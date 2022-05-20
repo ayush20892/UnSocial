@@ -15,7 +15,7 @@ import {
   getUser,
   unFollowUser,
 } from "../../features/user/userSlice";
-import { getPost } from "../../features/post/postSlice";
+import { getPost, toggleLoader } from "../../features/post/postSlice";
 import { getArrayMatch, searchInFollowing } from "../../utils/userUtils";
 
 function UserProfile({ user, type }: { user: userType; type: string }) {
@@ -40,7 +40,9 @@ function UserProfile({ user, type }: { user: userType; type: string }) {
   }
 
   async function followHandler() {
+    dispatch(toggleLoader(true));
     const data = await followUserCall(user._id);
+    dispatch(toggleLoader(false));
     await createNotificationCall({ toUserId: user._id, type: "Followed_User" });
     if (data.success) {
       setUserFollower(userFollower + 1);
@@ -49,7 +51,9 @@ function UserProfile({ user, type }: { user: userType; type: string }) {
   }
 
   async function unFollowHandler() {
+    dispatch(toggleLoader(true));
     const data = await unFollowUserCall(user._id);
+    dispatch(toggleLoader(false));
     if (data.success) {
       setUserFollower(userFollower - 1);
       dispatch(unFollowUser(user));

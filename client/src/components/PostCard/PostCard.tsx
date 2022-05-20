@@ -20,7 +20,11 @@ import {
   removeFromBookmark,
   unFollowUser,
 } from "../../features/user/userSlice";
-import { likePost, unLikePost } from "../../features/post/postSlice";
+import {
+  likePost,
+  toggleLoader,
+  unLikePost,
+} from "../../features/post/postSlice";
 import {
   likePostCall,
   unlikePostCall,
@@ -78,7 +82,9 @@ function PostCard({ post }: { post: postType }) {
   }
 
   async function followHandler() {
+    dispatch(toggleLoader(true));
     const data = await followUserCall(post.userId._id);
+    dispatch(toggleLoader(false));
     await createNotificationCall({
       toUserId: post.userId._id,
       type: "Followed_User",
@@ -89,9 +95,11 @@ function PostCard({ post }: { post: postType }) {
   }
 
   async function unFollowHandler() {
-    const data = await unFollowUserCall(user._id);
+    dispatch(toggleLoader(true));
+    const data = await unFollowUserCall(post.userId._id);
+    dispatch(toggleLoader(false));
     if (data.success) {
-      dispatch(unFollowUser(user));
+      dispatch(unFollowUser(post.userId));
     }
   }
 

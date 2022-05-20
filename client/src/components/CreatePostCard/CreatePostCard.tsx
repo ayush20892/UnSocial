@@ -5,15 +5,20 @@ import { AiOutlineClose } from "react-icons/ai";
 import { InputEvent } from "../../utils/types";
 import axios from "axios";
 import { createPostCall } from "../../utils/networkCall/postCalls";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { createPost } from "../../features/post/postSlice";
+import {
+  createPost,
+  getNetworkLoader,
+  toggleLoader,
+} from "../../features/post/postSlice";
 axios.defaults.withCredentials = true;
 
 function CreatePostCard() {
   const [image, setImage] = useState<string | null>();
   const [imageFile, setImageFile] = useState<File | null>();
   const [textContent, setTextcontent] = useState("");
+  const networkLoader = useSelector(getNetworkLoader);
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -34,8 +39,11 @@ function CreatePostCard() {
   }
 
   async function postHandler() {
+    dispatch(toggleLoader(true));
     const data = await createPostCall(imageFile!, textContent);
+    dispatch(toggleLoader(false));
     if (data.success) {
+      console.log(data.post);
       dispatch(createPost(data.post));
       navigate("/");
     }
@@ -78,9 +86,9 @@ function CreatePostCard() {
           {280 - textContent.length}
         </div>
       </div>
-      <div className="create-post-btn" onClick={() => postHandler()}>
-        Post
-      </div>
+      <button className="create-post-btn" onClick={() => postHandler()}>
+        {networkLoader ? <>Posting..</> : <>Post</>}
+      </button>
     </div>
   );
 }

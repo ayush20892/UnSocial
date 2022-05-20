@@ -10,10 +10,13 @@ import {
   toggleToEditPost,
 } from "../../features/post/postSlice";
 import { actionMenuType } from "../../utils/types";
+import { useLocation, useNavigate } from "react-router-dom";
 
 function ActionMenuDropdown({ item }: { item: string }) {
   const [dropDownDisplay, setDropDownDisplay] = useState(false);
   const dispatch = useDispatch();
+  const location = useLocation();
+  const navigate = useNavigate();
 
   const editPostButton = {
     action: "Edit Post",
@@ -28,6 +31,7 @@ function ActionMenuDropdown({ item }: { item: string }) {
     actionFunction: async () => {
       dispatch(deletePost(item));
       await deletePostCall(item);
+      if (location.pathname.includes("/post/")) navigate("/");
     },
   };
 

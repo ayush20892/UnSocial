@@ -15,6 +15,7 @@ import {
   followUserCall,
   unFollowUserCall,
 } from "../../utils/networkCall/userCalls";
+import { toggleLoader } from "../../features/post/postSlice";
 
 function UserCard({ user }: { user: userType }) {
   const userLoggedIn = useSelector(getUser);
@@ -22,7 +23,9 @@ function UserCard({ user }: { user: userType }) {
   const navigate = useNavigate();
 
   async function followHandler() {
+    dispatch(toggleLoader(true));
     const data = await followUserCall(user._id);
+    dispatch(toggleLoader(false));
     await createNotificationCall({ toUserId: user._id, type: "Followed_User" });
     if (data.success) {
       dispatch(followUser(user));
@@ -30,7 +33,9 @@ function UserCard({ user }: { user: userType }) {
   }
 
   async function unFollowHandler() {
+    dispatch(toggleLoader(true));
     const data = await unFollowUserCall(user._id);
+    dispatch(toggleLoader(false));
     if (data.success) {
       dispatch(unFollowUser(user));
     }

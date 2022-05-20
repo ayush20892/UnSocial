@@ -40,7 +40,9 @@ function EditPost() {
         <AiOutlineClose />
       </div>
       <div className="edit-post">
-        <img src={post!.image ? post!.image.secure_url : ""} alt="" />
+        {post!.image && (
+          <img src={post!.image ? post!.image.secure_url : ""} alt="" />
+        )}
         <textarea
           value={textContent}
           ref={inputEl}

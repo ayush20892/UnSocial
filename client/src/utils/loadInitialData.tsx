@@ -7,16 +7,18 @@ import { loadPosts, toggleLoader } from "../features/post/postSlice";
 type loadInitialDataProp = {
   dispatch: Function;
   navigate: NavigateFunction;
+  setIsLoading: Function;
 };
 
 export default async function loadInitialData({
   dispatch,
   navigate,
+  setIsLoading,
 }: loadInitialDataProp) {
   const session: { userId: string } = JSON.parse(
     localStorage.getItem("session")!
   );
-
+  setIsLoading(true);
   const data = await getAllPosts();
   if (data.success) dispatch(loadPosts(data.posts));
 
@@ -30,5 +32,5 @@ export default async function loadInitialData({
       dispatch(login(userData!.user));
     }
   }
-  dispatch(toggleLoader(false));
+  setIsLoading(false);
 }

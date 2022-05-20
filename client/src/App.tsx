@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Route, Routes, useLocation, useNavigate } from "react-router-dom";
 import "./App.css";
@@ -13,7 +13,6 @@ import Header from "./components/Header/Header";
 import Loader from "./components/Loader/Loader";
 import Modal from "./components/Modal/Modal";
 import Sidebar from "./components/Sidebar/Sidebar";
-import { getEditPostModal, getNetworkLoader } from "./features/post/postSlice";
 import CreatePost from "./pages/CreatePost";
 import EditProfile from "./pages/EditProfile";
 import Explore from "./pages/Explore";
@@ -27,11 +26,13 @@ import Post from "./pages/Post";
 import PostLike from "./pages/PostLike";
 import Search from "./pages/Search";
 import User from "./pages/User";
+import { getEditPostModal, getNetworkLoader } from "./features/post/postSlice";
 import loadInitialData from "./utils/loadInitialData";
 import { PrivateRoute } from "./utils/privateRoute";
 import { ToastContainer } from "react-toastify";
 
 function App() {
+  const [isLoading, setIsLoading] = useState(false);
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const networkLoader = useSelector(getNetworkLoader);
@@ -42,6 +43,7 @@ function App() {
     loadInitialData({
       dispatch,
       navigate,
+      setIsLoading,
     });
   }, []);
 
@@ -51,6 +53,18 @@ function App() {
   if (location.pathname === "/verifyCode") return <VerifyCodeBox />;
   if (location.pathname === "/passwordReset") return <PasswordResetBox />;
 
+  if (isLoading) {
+    return (
+      <>
+        <Header />
+        <div className="loader">
+          <Loader />
+        </div>
+        <Footer />
+      </>
+    );
+  }
+
   return (
     <div className="App">
       <Header />
@@ -59,118 +73,116 @@ function App() {
           <EditPost />
         </Modal>
       )}
-      <>
-        {networkLoader ? (
+      <main>
+        {networkLoader && (
           <div className="network-loader">
             <Loader />
           </div>
-        ) : (
-          <main>
-            <Sidebar />
-            <div className="main-content">
-              <Routes>
-                <Route
-                  path="/"
-                  element={
-                    <PrivateRoute>
-                      <Feed />
-                    </PrivateRoute>
-                  }
-                />
-                <Route
-                  path="/explore"
-                  element={
-                    <PrivateRoute>
-                      <Explore />
-                    </PrivateRoute>
-                  }
-                />
-                <Route
-                  path="/createPost"
-                  element={
-                    <PrivateRoute>
-                      <CreatePost />
-                    </PrivateRoute>
-                  }
-                />
-                <Route path="/post/:postId" element={<Post />} />
-                <Route
-                  path="/likes"
-                  element={
-                    <PrivateRoute>
-                      <PostLike />
-                    </PrivateRoute>
-                  }
-                />
-                <Route
-                  path="/notification"
-                  element={
-                    <PrivateRoute>
-                      <Notification />
-                    </PrivateRoute>
-                  }
-                />
-                <Route
-                  path="/user/:userName"
-                  element={
-                    <PrivateRoute>
-                      <User />
-                    </PrivateRoute>
-                  }
-                />
-                <Route
-                  path="/user/password"
-                  element={
-                    <PrivateRoute>
-                      <PasswordUpdate />
-                    </PrivateRoute>
-                  }
-                />
-                <Route
-                  path="/editProfile"
-                  element={
-                    <PrivateRoute>
-                      <EditProfile />
-                    </PrivateRoute>
-                  }
-                />
-                <Route
-                  path="/followers"
-                  element={
-                    <PrivateRoute>
-                      <Followers />
-                    </PrivateRoute>
-                  }
-                />
-                <Route
-                  path="/following"
-                  element={
-                    <PrivateRoute>
-                      <Following />
-                    </PrivateRoute>
-                  }
-                />
-                <Route
-                  path="/search"
-                  element={
-                    <PrivateRoute>
-                      <Search />
-                    </PrivateRoute>
-                  }
-                />
-                <Route
-                  path="*"
-                  element={
-                    <PrivateRoute>
-                      <Landing />
-                    </PrivateRoute>
-                  }
-                />
-              </Routes>
-            </div>
-          </main>
         )}
-      </>
+        <Sidebar />
+        <div className="main-content">
+          <Routes>
+            <Route
+              path="/"
+              element={
+                <PrivateRoute>
+                  <Feed />
+                </PrivateRoute>
+              }
+            />
+            <Route
+              path="/explore"
+              element={
+                <PrivateRoute>
+                  <Explore />
+                </PrivateRoute>
+              }
+            />
+            <Route
+              path="/createPost"
+              element={
+                <PrivateRoute>
+                  <CreatePost />
+                </PrivateRoute>
+              }
+            />
+            <Route path="/post/:postId" element={<Post />} />
+            <Route
+              path="/likes"
+              element={
+                <PrivateRoute>
+                  <PostLike />
+                </PrivateRoute>
+              }
+            />
+            <Route
+              path="/notification"
+              element={
+                <PrivateRoute>
+                  <Notification />
+                </PrivateRoute>
+              }
+            />
+            <Route
+              path="/user/:userName"
+              element={
+                <PrivateRoute>
+                  <User />
+                </PrivateRoute>
+              }
+            />
+            <Route
+              path="/user/password"
+              element={
+                <PrivateRoute>
+                  <PasswordUpdate />
+                </PrivateRoute>
+              }
+            />
+            <Route
+              path="/editProfile"
+              element={
+                <PrivateRoute>
+                  <EditProfile />
+                </PrivateRoute>
+              }
+            />
+            <Route
+              path="/followers"
+              element={
+                <PrivateRoute>
+                  <Followers />
+                </PrivateRoute>
+              }
+            />
+            <Route
+              path="/following"
+              element={
+                <PrivateRoute>
+                  <Following />
+                </PrivateRoute>
+              }
+            />
+            <Route
+              path="/search"
+              element={
+                <PrivateRoute>
+                  <Search />
+                </PrivateRoute>
+              }
+            />
+            <Route
+              path="*"
+              element={
+                <PrivateRoute>
+                  <Landing />
+                </PrivateRoute>
+              }
+            />
+          </Routes>
+        </div>
+      </main>
+
       <ToastContainer
         position="bottom-right"
         autoClose={2000}
