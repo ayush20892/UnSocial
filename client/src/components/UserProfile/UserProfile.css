@@ -144,8 +144,13 @@
     border-radius: 50%;
   }
 
+  .profile-details {
+    padding-left: 10px;
+  }
+
   .user-content-numbers > div {
     text-align: center;
+    padding-right: 14px;
   }
 
   .profile-content > .tabs {
