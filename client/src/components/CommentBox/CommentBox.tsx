@@ -113,15 +113,19 @@ function CommentBox({ post }: { post: postType }) {
                   </div>
                   <div className="comment-text">{comm.comment}</div>
                   <div className="comment-action">
-                    <span onClick={() => deleteCommentHandler(comm._id)}>
-                      Delete
-                    </span>
+                    {user._id === comm.user._id && (
+                      <button onClick={() => deleteCommentHandler(comm._id)}>
+                        Delete
+                      </button>
+                    )}
                     {replyInputBox !== comm._id ? (
-                      <span onClick={() => setReplyInputBox(comm._id)}>
+                      <button onClick={() => setReplyInputBox(comm._id)}>
                         Reply
-                      </span>
+                      </button>
                     ) : (
-                      <span onClick={() => setReplyInputBox("")}>Close</span>
+                      <button onClick={() => setReplyInputBox("")}>
+                        Close
+                      </button>
                     )}
                   </div>
                   {replyInputBox === comm._id ? (
@@ -166,13 +170,15 @@ function CommentBox({ post }: { post: postType }) {
                             </div>
                             <div className="comment-text">{repl.reply}</div>
                             <div className="comment-action">
-                              <span
-                                onClick={() =>
-                                  deleteReplyHandler(comm._id, repl._id)
-                                }
-                              >
-                                Delete
-                              </span>
+                              {user._id === repl.user._id && (
+                                <span
+                                  onClick={() =>
+                                    deleteReplyHandler(comm._id, repl._id)
+                                  }
+                                >
+                                  Delete
+                                </span>
+                              )}
                             </div>
                           </div>
                         </div>
