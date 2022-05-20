@@ -35,9 +35,10 @@ exports.createPost = BigPromise(async (req, res) => {
 
   const updatedObject = {
     textContent: req.body.textContent,
-    userId: user._id,
+    userId: user,
   };
 
+  console.log(updatedObject);
   if (req.files) {
     const photo = req.files.image;
 
