@@ -12,8 +12,9 @@ import "./CommentBox.css";
 import userImage from "../../icon/user.png";
 import { commentType, postType } from "../../utils/types";
 import { createNotificationCall } from "../../utils/networkCall/userCalls";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { getUser } from "../../features/user/userSlice";
+import { toggleLoader } from "../../features/post/postSlice";
 
 function CommentBox({ post }: { post: postType }) {
   const { postId } = useParams();
@@ -24,6 +25,7 @@ function CommentBox({ post }: { post: postType }) {
   const [replyInputBox, setReplyInputBox] = useState("");
   const [networkLoader, setNetworkLoader] = useState(false);
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   async function getCommentsData() {
     setNetworkLoader(true);
@@ -34,7 +36,9 @@ function CommentBox({ post }: { post: postType }) {
 
   async function commentHandler() {
     if (user._id === "") navigate("/landing");
+    dispatch(toggleLoader(true));
     const data = await addCommentCall(postId!, text);
+    dispatch(toggleLoader(false));
     if (user._id !== post.userId._id)
       await createNotificationCall({
         toUserId: post.userId._id,
@@ -47,13 +51,15 @@ function CommentBox({ post }: { post: postType }) {
   }
 
   async function deleteCommentHandler(commentId: string) {
-    const updatedComment = comments.filter((comm) => comm._id === commentId);
+    const updatedComment = comments.filter((comm) => comm._id !== commentId);
     setComments(updatedComment);
     await deleteCommentCall(postId!, commentId);
   }
 
   async function replyHandler(commentId: string) {
+    dispatch(toggleLoader(true));
     const data = await addReplyCall(postId!, commentId, replyText);
+    dispatch(toggleLoader(false));
     const updatedComment = comments.map((comm) => {
       if (comm._id === commentId) {
         comm.replies.push(data.newReply);
@@ -171,13 +177,13 @@ function CommentBox({ post }: { post: postType }) {
                             <div className="comment-text">{repl.reply}</div>
                             <div className="comment-action">
                               {user._id === repl.user._id && (
-                                <span
+                                <button
                                   onClick={() =>
                                     deleteReplyHandler(comm._id, repl._id)
                                   }
                                 >
                                   Delete
-                                </span>
+                                </button>
                               )}
                             </div>
                           </div>
