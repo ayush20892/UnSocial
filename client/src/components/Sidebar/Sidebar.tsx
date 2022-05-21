@@ -23,7 +23,7 @@ function Sidebar() {
     setUnreadCount(
       user.notification.filter((noti) => noti.isRead === false).length
     );
-  }, []);
+  }, [user]);
 
   return (
     <ul className="sidebar">

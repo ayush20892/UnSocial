@@ -17,12 +17,12 @@ function NotficationCardDisplay() {
   const dispatch = useDispatch();
 
   async function updateNotificationHandler() {
-    console.log("HELL YEAHHHH WHYYYY")
     if (user.notification.find((noti) => noti.isRead === false)) {
-      // dispatch(updateNotification());
       const notificationArray = user.notification.filter(
         (noti) => noti.isRead === false
       );
+
+      dispatch(updateNotification());
 
       await updateNotificationsCall(notificationArray);
     }

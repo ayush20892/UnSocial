@@ -1,11 +1,6 @@
 import { createSlice, current, PayloadAction } from "@reduxjs/toolkit";
 import { RootState } from "../../app/store";
-import {
-  likePayload,
-  notificationType,
-  postType,
-  userType,
-} from "../../utils/types";
+import { likePayload, postType, userType } from "../../utils/types";
 import {
   createPost,
   deletePost,
@@ -77,18 +72,12 @@ export const userSlice = createSlice({
       );
     },
     updateNotification: (state) => {
-      console.log(
-        current(state.notification).map((notification) => {
-          if (notification.isRead === false) notification.isRead = true;
-          return notification;
-        })
-      );
-      state.notification = current(state.notification).map((notification) => {
-        if (notification.isRead === false) notification.isRead = true;
-        return notification;
+      state.notification = state.notification.map((noti) => {
+        if (noti.isRead === false) noti.isRead = true;
+        return noti;
       });
     },
-    deleteNotifications: (state: userType) => {
+    deleteNotifications: (state) => {
       return { ...state, notification: [] };
     },
   },
